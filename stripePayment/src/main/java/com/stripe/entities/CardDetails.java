@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -28,4 +29,5 @@ public class CardDetails
     Amount amount;
 //    @NotNull
 //   public LocalDate creationdate;
+//ZonedDateTime fromDate = ZonedDateTime.parse("2022-01-05T00:00:00Z");
 }
