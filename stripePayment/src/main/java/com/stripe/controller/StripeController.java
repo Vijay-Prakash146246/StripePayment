@@ -19,7 +19,7 @@ public class StripeController
     PaymentSvc paymentSvc;
     @Value("${Stripe.apiKey}")
     String stripeKey;
-    //creating payment
+    //API for creating payment
     @PostMapping("/Create-Payment")
     public Charge payUsingCard(@RequestBody @Valid CardDetails cardDetails) throws StripeException
     {
@@ -37,8 +37,7 @@ public class StripeController
         ChargeCollection charges = Charge.list(params);
         return charges;
     }
-    //API for getting  a particular  payment  details
-
+    //API for getting  a particular  payment  details by payment id
     @GetMapping("Search-by-Transaction-ID/{id}")
     public  Charge retriveCharge(@PathVariable String id) throws StripeException
     {
@@ -47,7 +46,7 @@ public class StripeController
         return charge;
     }
 
-//API for create  refund for particular payment
+//API for create  refund for particular payment using payment id
     @PostMapping("Create-Refund/{id}")
     public  Refund CreateRefund(@PathVariable String id) throws StripeException
     {
@@ -68,5 +67,5 @@ public class StripeController
         RefundCollection refunds = Refund.list(params);
         return refunds;
     }
-    
+
 }
