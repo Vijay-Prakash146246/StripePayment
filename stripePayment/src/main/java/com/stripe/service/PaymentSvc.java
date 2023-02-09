@@ -34,8 +34,8 @@ public class PaymentSvc
 //        Timestamp endTimestamp = Timestamp.valueOf(str1);
 //        chargeParams.put("startTimestamp", startTimestamp);
 //        chargeParams.put("endTimestamp", endTimestamp);
-        long timestamp = System.currentTimeMillis() / 1000L;
-        chargeParams.put("timestamp", timestamp);
+//        long timestamp = System.currentTimeMillis() / 1000L;
+//        chargeParams.put("timestamp", timestamp);
         //
 
 
