@@ -7,6 +7,7 @@ import com.stripe.model.Charge;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 @Service
@@ -23,6 +24,21 @@ public class PaymentSvc
 
         chargeParams.put("amount", cardDetails.getAmount().getAmount()); // in cents
         chargeParams.put("currency", cardDetails.getAmount().getCurrency());
+
+
+
+        //
+//        String str = "2020-09-01 10:05:15";
+//        Timestamp startTimestamp = Timestamp.valueOf(str);
+//        String str1 = "2020-09-01 10:05:15";
+//        Timestamp endTimestamp = Timestamp.valueOf(str1);
+//        chargeParams.put("startTimestamp", startTimestamp);
+//        chargeParams.put("endTimestamp", endTimestamp);
+        long timestamp = System.currentTimeMillis() / 1000L;
+        chargeParams.put("timestamp", timestamp);
+        //
+
+
 
         Map<String, Object> card = new HashMap<>();
         //card.put("number", cardNumber);

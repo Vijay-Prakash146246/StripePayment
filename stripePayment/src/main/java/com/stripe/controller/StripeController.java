@@ -68,4 +68,42 @@ public class StripeController
         return refunds;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Code under test
+    @GetMapping("Display-list-of-Payment-Transactions1")
+    public  ChargeCollection listAllCharges1() throws StripeException {
+        Stripe.apiKey = stripeKey;
+//        Map<String, Object> params = new HashMap<>();
+//        // params.put("limit", 3);
+//        ChargeCollection charges = Charge.list(params);
+//        return charges;
+        long startTimestamp = 1546300800; // start of Jan 1st, 2019 in UNIX timestamp
+        long endTimestamp = 1609439200; // end of Dec 31st, 2020 in UNIX timestamp
+
+        Map<String, Object> chargeParams = new HashMap<>();
+        chargeParams.put("created", new HashMap<String, Object>() {{
+            put("gte", startTimestamp);
+            put("lte", endTimestamp);
+        }});
+
+        ChargeCollection charges = Charge.list(chargeParams);
+
+        for (Charge charge : charges.getData()) {
+            System.out.println(charge.getId() + " " + charge.getCreated());
+
+        }
+        return charges;
+    }
 }
