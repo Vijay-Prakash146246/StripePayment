@@ -11,6 +11,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PersonDetails
 {
+    String bookingno;
+    String currency;
+    int noOfPassengers;
+    String supportCost;
+    String supportPackage;
     String firstname;
     String middlename;
     String lastname;

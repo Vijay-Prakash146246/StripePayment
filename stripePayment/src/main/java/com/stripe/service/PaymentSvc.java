@@ -35,6 +35,11 @@ public class PaymentSvc
 
         // Store metadata with the charge
         Map<String, String> metadata = new HashMap<>();
+        metadata.put("bookingno", cardDetails.getPersonDetails().getBookingno());
+        metadata.put("currency", cardDetails.getPersonDetails().getCurrency());
+        metadata.put("noOfPassengers", String.valueOf(cardDetails.getPersonDetails().getNoOfPassengers()));
+        metadata.put("supportCost", cardDetails.getPersonDetails().getSupportCost());
+        metadata.put("supportPackage", cardDetails.getPersonDetails().getSupportPackage());
         metadata.put("first-name", cardDetails.getPersonDetails().getFirstname());
         metadata.put("middle-name", cardDetails.getPersonDetails().getMiddlename());
         metadata.put("last-name", cardDetails.getPersonDetails().getLastname());
