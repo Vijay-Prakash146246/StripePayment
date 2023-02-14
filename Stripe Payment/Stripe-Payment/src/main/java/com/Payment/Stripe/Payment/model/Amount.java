@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -27,4 +29,7 @@ public class Amount
     @NotNull
     @Column(name = "Currency")
     String currency;
+    @CreationTimestamp
+    @Column(name = "Paid_At",nullable = false,updatable = false)
+    private Date paidAt;
 }
