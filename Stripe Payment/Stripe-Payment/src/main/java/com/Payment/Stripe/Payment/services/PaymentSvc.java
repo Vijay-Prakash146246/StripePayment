@@ -25,6 +25,8 @@ public class PaymentSvc
     private CardDetailsRepo cardDetailsRepo;
     @Autowired
     private PersonDetailsRepo personDetailsRepo;
+    @Autowired
+    private  ResultSvc resultSvc;
     public Charge payUsingCard(CardDetails cardDetails) throws StripeException
     {
         Stripe.apiKey = stripeKey;
@@ -61,6 +63,8 @@ public class PaymentSvc
 
         cardDetailsRepo.save(cardDetails);
         Charge charge = Charge.create(chargeParams);
+        String responseId = charge.getId();
+        resultSvc.savePaymentResponse(responseId);
         //System.out.println(charge);
         return charge;
     }

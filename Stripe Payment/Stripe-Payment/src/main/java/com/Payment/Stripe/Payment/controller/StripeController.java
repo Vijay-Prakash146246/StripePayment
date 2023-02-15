@@ -1,7 +1,11 @@
 package com.Payment.Stripe.Payment.controller;
 
 import com.Payment.Stripe.Payment.model.CardDetails;
+import com.Payment.Stripe.Payment.model.Result;
+import com.Payment.Stripe.Payment.repository.ResultRepo;
 import com.Payment.Stripe.Payment.services.PaymentSvc;
+import com.Payment.Stripe.Payment.services.ResultSvc;
+import com.google.gson.JsonObject;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -15,12 +19,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class StripeController
 {
     @Autowired
     PaymentSvc paymentSvc;
+    @Autowired
+    private ResultRepo resultRepo;
     @Value("${Stripe.apiKey}")
     String stripeKey;
     //API for creating payment
@@ -86,28 +93,5 @@ public class StripeController
 
 
 //Code under test
-    @GetMapping("Display-list-of-Payment-Transactions1")
-    public  ChargeCollection listAllCharges1() throws StripeException {
-        Stripe.apiKey = stripeKey;
-//        Map<String, Object> params = new HashMap<>();
-//        // params.put("limit", 3);
-//        ChargeCollection charges = Charge.list(params);
-//        return charges;
-        long startTimestamp = 1546300800; // start of Jan 1st, 2019 in UNIX timestamp
-        long endTimestamp = 1609439200; // end of Dec 31st, 2020 in UNIX timestamp
 
-        Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("created", new HashMap<String, Object>() {{
-            put("gte", startTimestamp);
-            put("lte", endTimestamp);
-        }});
-
-        ChargeCollection charges = Charge.list(chargeParams);
-
-        for (Charge charge : charges.getData()) {
-            System.out.println(charge.getId() + " " + charge.getCreated());
-
-        }
-        return charges;
-    }
 }
