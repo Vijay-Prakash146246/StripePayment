@@ -1,11 +1,10 @@
 package com.Payment.Stripe.Payment.controller;
 
 import com.Payment.Stripe.Payment.model.CardDetails;
-import com.Payment.Stripe.Payment.model.Result;
-import com.Payment.Stripe.Payment.repository.ResultRepo;
+import com.Payment.Stripe.Payment.model.RefundInfo;
+import com.Payment.Stripe.Payment.repository.RefundInfoRepo;
+import com.Payment.Stripe.Payment.repository.PaymentInfoRepo;
 import com.Payment.Stripe.Payment.services.PaymentSvc;
-import com.Payment.Stripe.Payment.services.ResultSvc;
-import com.google.gson.JsonObject;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class StripeController
@@ -27,7 +25,7 @@ public class StripeController
     @Autowired
     PaymentSvc paymentSvc;
     @Autowired
-    private ResultRepo resultRepo;
+    private PaymentInfoRepo paymentInfoRepo;
     @Value("${Stripe.apiKey}")
     String stripeKey;
     //API for creating payment
@@ -93,5 +91,25 @@ public class StripeController
 
 
 //Code under test
+    @Autowired
+    private RefundInfoRepo refundInfoRepo;
+@PostMapping("Save-Refund/{id}")
+public  Refund saveRefundResponse(@PathVariable String id) throws StripeException
+{
+    Stripe.apiKey = stripeKey;
+    Map<String, Object> params = new HashMap<>();
+    params.put("charge", id);
+    Refund refund = Refund.create(params);
+    RefundInfo refundInfo = new RefundInfo();
+    refundInfo.setRefundAmount(refund.getAmount());
+    refundInfo.setRefundBalanceTransactionId(refund.getBalanceTransaction());
+    refundInfo.setRefundChargeId(refund.getCharge());
+    refundInfo.setCurrency(refund.getCurrency());
+    refundInfo.setRefundId(refund.getId());
+    refundInfo.setRefundStatus(refund.getStatus());
+    refundInfoRepo.save(refundInfo);
+    return refund;
+
+}
 
 }

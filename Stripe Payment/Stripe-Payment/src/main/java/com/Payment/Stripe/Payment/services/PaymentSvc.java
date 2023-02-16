@@ -1,7 +1,6 @@
 package com.Payment.Stripe.Payment.services;
 
 import com.Payment.Stripe.Payment.model.CardDetails;
-import com.Payment.Stripe.Payment.model.PersonDetails;
 import com.Payment.Stripe.Payment.repository.CardDetailsRepo;
 import com.Payment.Stripe.Payment.repository.PersonDetailsRepo;
 import com.stripe.Stripe;
@@ -26,7 +25,7 @@ public class PaymentSvc
     @Autowired
     private PersonDetailsRepo personDetailsRepo;
     @Autowired
-    private  ResultSvc resultSvc;
+    private PaymentInfoSvc paymentInfoSvc;
     public Charge payUsingCard(CardDetails cardDetails) throws StripeException
     {
         Stripe.apiKey = stripeKey;
@@ -64,7 +63,7 @@ public class PaymentSvc
         cardDetailsRepo.save(cardDetails);
         Charge charge = Charge.create(chargeParams);
         String responseId = charge.getId();
-        resultSvc.savePaymentResponse(responseId);
+        paymentInfoSvc.savePaymentResponse(responseId);
         //System.out.println(charge);
         return charge;
     }
