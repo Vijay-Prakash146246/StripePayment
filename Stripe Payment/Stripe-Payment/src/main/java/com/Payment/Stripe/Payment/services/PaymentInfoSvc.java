@@ -1,5 +1,4 @@
 package com.Payment.Stripe.Payment.services;
-
 import com.Payment.Stripe.Payment.model.PaymentInfo;
 import com.Payment.Stripe.Payment.repository.PaymentInfoRepo;
 import com.stripe.exception.StripeException;
@@ -12,14 +11,8 @@ public class PaymentInfoSvc
 {
     @Autowired
     private PaymentInfoRepo paymentInfoRepo;
-//    Optional<Result> findById(String transactionId)
-//    {
-//        return resultRepo.findById(transactionId);
-//    }
     public void savePaymentResponse(String id) throws StripeException {
-        //Stripe.apiKey = stripeKey;
         Charge charge = Charge.retrieve(id);
-
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setAmount(charge.getAmount());
         paymentInfo.setBalanceTransaction(charge.getBalanceTransaction());
@@ -27,7 +20,6 @@ public class PaymentInfoSvc
         paymentInfo.setGetCreated(charge.getCreated());
         paymentInfo.setStatus(charge.getStatus());
         paymentInfo.setTransactionId(charge.getId());
-        //result.setAddress(charge.getMetadata().get(1));
         paymentInfo.setAddress(charge.getMetadata().get("Address"));
         paymentInfo.setCountryCode(charge.getMetadata().get("Country_code"));
         paymentInfo.setPhoneNumber(charge.getMetadata().get("Ph.Number"));

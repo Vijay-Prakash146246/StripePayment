@@ -1,5 +1,4 @@
 package com.Payment.Stripe.Payment.services;
-
 import com.Payment.Stripe.Payment.model.CardDetails;
 import com.Payment.Stripe.Payment.repository.CardDetailsRepo;
 import com.Payment.Stripe.Payment.repository.PersonDetailsRepo;
@@ -9,15 +8,12 @@ import com.stripe.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class PaymentSvc
 {
-//    @Autowired
-//    private PaymentRepo paymentRepo;
     @Value("${Stripe.apiKey}")
     String stripeKey;
     @Autowired
@@ -38,6 +34,7 @@ public class PaymentSvc
 
         Map<String, Object> card = new HashMap<>();
         //card.put("number", cardNumber);
+        int cardLength = cardDetails.getCardNumber().length();
         card.put("number", cardDetails.getCardNumber());
         card.put("exp_month", cardDetails.getExpMonth());
         card.put("exp_year", cardDetails.getExpYear());

@@ -1,12 +1,10 @@
 package com.Payment.Stripe.Payment.model;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
