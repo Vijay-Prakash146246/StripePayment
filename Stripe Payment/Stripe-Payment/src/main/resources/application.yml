@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/paymentdb
+    password: root
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+        format_sql: 'true'
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: update
+server:
+  port: '8085'
+Stripe:
+  apiKey: sk_test_51LsXmaCs04jIriC2U8BLHQMcUoBAeYjAa1mDFoSraQi1pkmkavlfeHA4DptDkd4LGNqLQjVuDoT1ZUKh0H9ktfnV00xgfznH3j

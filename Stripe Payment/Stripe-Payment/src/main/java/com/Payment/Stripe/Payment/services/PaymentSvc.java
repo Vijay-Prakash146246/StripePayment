@@ -33,7 +33,6 @@ public class PaymentSvc
 
 
         Map<String, Object> card = new HashMap<>();
-        //card.put("number", cardNumber);
         int cardLength = cardDetails.getCardNumber().length();
         card.put("number", cardDetails.getCardNumber());
         card.put("exp_month", cardDetails.getExpMonth());
