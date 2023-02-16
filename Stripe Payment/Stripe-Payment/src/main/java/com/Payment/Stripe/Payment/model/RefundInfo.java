@@ -16,14 +16,16 @@ import java.util.Date;
 public class RefundInfo
 {
         @Id
+        private String refundChargeId;
         private  String refundId;
         private long refundAmount;
         private String refundBalanceTransactionId;
-        private String refundChargeId;
         private String currency;
         private  String refundStatus;
         @CreationTimestamp
         @Column(updatable = false)
         private Date refundAt;
+        @OneToOne(cascade = CascadeType.ALL)
+        private PaymentInfo paymentInfo;
 
 }
