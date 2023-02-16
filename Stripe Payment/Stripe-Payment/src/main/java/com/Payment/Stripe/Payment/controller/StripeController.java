@@ -5,6 +5,7 @@ import com.Payment.Stripe.Payment.model.RefundInfo;
 import com.Payment.Stripe.Payment.repository.RefundInfoRepo;
 import com.Payment.Stripe.Payment.repository.PaymentInfoRepo;
 import com.Payment.Stripe.Payment.services.PaymentSvc;
+import com.Payment.Stripe.Payment.services.RefundInfoSvc;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -92,7 +93,8 @@ public class StripeController
 
 //Code under test
     @Autowired
-    private RefundInfoRepo refundInfoRepo;
+    private RefundInfoSvc refundInfoSvc;
+   // private RefundInfoRepo refundInfoRepo;
 @PostMapping("Save-Refund/{id}")
 public  Refund saveRefundResponse(@PathVariable String id) throws StripeException
 {
@@ -107,7 +109,8 @@ public  Refund saveRefundResponse(@PathVariable String id) throws StripeExceptio
     refundInfo.setCurrency(refund.getCurrency());
     refundInfo.setRefundId(refund.getId());
     refundInfo.setRefundStatus(refund.getStatus());
-    refundInfoRepo.save(refundInfo);
+    //refundInfoRepo.save(refundInfo);
+    refundInfoSvc.saveRefundResponse(refund);
     return refund;
 
 }
