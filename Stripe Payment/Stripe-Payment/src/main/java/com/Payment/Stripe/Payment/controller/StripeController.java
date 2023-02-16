@@ -57,6 +57,8 @@ public class StripeController
     }
 
 //API for create  refund for particular payment using payment id
+@Autowired
+private RefundInfoSvc refundInfoSvc;
     @PostMapping("Create-Refund/{id}")
     public  Refund CreateRefund(@PathVariable String id) throws StripeException
     {
@@ -64,6 +66,7 @@ public class StripeController
         Map<String, Object> params = new HashMap<>();
         params.put("charge", id);
         Refund refund = Refund.create(params);
+        refundInfoSvc.saveRefundResponse(refund);
         return refund;
 
     }
@@ -92,27 +95,5 @@ public class StripeController
 
 
 //Code under test
-    @Autowired
-    private RefundInfoSvc refundInfoSvc;
-   // private RefundInfoRepo refundInfoRepo;
-@PostMapping("Save-Refund/{id}")
-public  Refund saveRefundResponse(@PathVariable String id) throws StripeException
-{
-    Stripe.apiKey = stripeKey;
-    Map<String, Object> params = new HashMap<>();
-    params.put("charge", id);
-    Refund refund = Refund.create(params);
-    RefundInfo refundInfo = new RefundInfo();
-    refundInfo.setRefundAmount(refund.getAmount());
-    refundInfo.setRefundBalanceTransactionId(refund.getBalanceTransaction());
-    refundInfo.setRefundChargeId(refund.getCharge());
-    refundInfo.setCurrency(refund.getCurrency());
-    refundInfo.setRefundId(refund.getId());
-    refundInfo.setRefundStatus(refund.getStatus());
-    //refundInfoRepo.save(refundInfo);
-    refundInfoSvc.saveRefundResponse(refund);
-    return refund;
-
-}
 
 }
