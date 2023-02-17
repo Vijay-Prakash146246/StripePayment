@@ -1,30 +1,46 @@
 package com.Payment.Stripe.Payment.model;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 @Entity
-@Table(name = "PersonDetails")
-public class PersonDetails
+@Data
+@Table(name = "Transaction_Info")
+public class Transaction
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
     @NotNull
-    @Column(name = "Person_Id")
-    int personId;
-    @NotNull
-    @Column(name = "Booking_No")
-    String bookingno;
+    @Column(name = "Amount")
+    int amount;
     @NotNull
     @Column(name = "Currency")
     String currency;
+    @CreationTimestamp
+    @Column(name = "Paid_At",nullable = false,updatable = false)
+    private Date paidAt;
+    @NotNull
+    @Transient
+    @Column(name = "Card_Number")
+    String cardNumber ;
+    @NotNull
+    @Column(name = "Exp_Month")
+    int expMonth ;
+    @NotNull
+    @Column(name = "Exp_Year")
+    int expYear ;
+    @NotNull
+    @Transient
+    @Column(name = "cvc")
+    String cvc ;
+    @NotNull
+    @Column(name = "Booking_No")
+    String bookingno;
     @NotNull
     @Column(name = "No_Of_Passengers")
     int noOfPassengers;
