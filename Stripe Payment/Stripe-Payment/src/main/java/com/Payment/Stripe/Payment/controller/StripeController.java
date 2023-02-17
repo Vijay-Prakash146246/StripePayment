@@ -1,8 +1,10 @@
 package com.Payment.Stripe.Payment.controller;
 import com.Payment.Stripe.Payment.model.CardDetails;
+import com.Payment.Stripe.Payment.model.UserInfo;
 import com.Payment.Stripe.Payment.repository.PaymentInfoRepo;
 import com.Payment.Stripe.Payment.services.PaymentSvc;
 import com.Payment.Stripe.Payment.services.RefundInfoSvc;
+import com.Payment.Stripe.Payment.services.UserInfoSvc;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -91,5 +93,13 @@ private RefundInfoSvc refundInfoSvc;
 
 
 //Code under test
+    @Autowired
+    private UserInfoSvc userInfoSvc;
+    @PostMapping("/Payment")
+    public Charge payByCard(@RequestBody @Valid UserInfo userInfo) throws StripeException
+    {
+        Charge charge = userInfoSvc.payUsingCard(userInfo);
+        return charge;
+    }
 
 }

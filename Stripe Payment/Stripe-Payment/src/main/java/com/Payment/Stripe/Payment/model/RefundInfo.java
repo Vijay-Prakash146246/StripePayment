@@ -1,4 +1,5 @@
 package com.Payment.Stripe.Payment.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class RefundInfo
         @Column(updatable = false)
         private Date refundAt;
         @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "transactionId")
+        @JsonIgnore
+        @Transient
         private PaymentInfo paymentInfo;
 
 }
