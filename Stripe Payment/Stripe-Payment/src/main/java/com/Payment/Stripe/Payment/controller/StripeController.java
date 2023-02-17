@@ -33,14 +33,7 @@ public class StripeController
         return charge;
     }
 
-//    @PostMapping("/Create-Payment")
-//    public Charge payUsingCard(@RequestBody @Valid CardDetails cardDetails) throws StripeException
-//    {
-//        Charge charge = paymentSvc.payUsingCard(cardDetails);
-//        return charge;
-//    }
-
-    ///API for getting list of all payment
+    //API for getting list of all payment
     @GetMapping("Display-list-of-Payment-Transactions")
     public  ChargeCollection listAllCharges() throws StripeException
     {
