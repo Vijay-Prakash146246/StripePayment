@@ -94,7 +94,7 @@ private RefundInfoSvc refundInfoSvc;
         return filteredPaymentIntents;
     }
 
-    @GetMapping("/createRefund/{bookingNumber}/{amount}")
+    @GetMapping("/CreateRefund/{bookingNumber}/{amount}")
     public List<Refund> refundPaymentsByBookingNumber(@PathVariable String bookingNumber , @PathVariable Long amount) throws StripeException
     {
         Stripe.apiKey = stripeKey;
