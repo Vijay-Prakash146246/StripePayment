@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -93,7 +92,7 @@ private RefundInfoSvc refundInfoSvc;
                 .collect(Collectors.toList());
         return filteredPaymentIntents;
     }
-
+    //API for create Refund By booking number and amount
     @GetMapping("/CreateRefund/{bookingNumber}/{amount}")
     public List<Refund> refundPaymentsByBookingNumber(@PathVariable String bookingNumber , @PathVariable Long amount) throws StripeException
     {
@@ -117,6 +116,24 @@ private RefundInfoSvc refundInfoSvc;
         return refundList;
     }
 
+    //API for Search By date Range
+    @GetMapping("/SearchBy/{startDate}/{endDate}")
+    public List<Charge> searchPaymentsByDateRange(@PathVariable String startDate, @PathVariable String endDate) throws StripeException, ParseException {
+        Stripe.apiKey = stripeKey;
+        // Convert start and end date strings to Date objects
+        Date startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+        Date endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+        Map<String, Object> params1 = new HashMap<>();
+        // params.put("limit", 3);
+        ChargeCollection charges = Charge.list(params1);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+                .filter(payment -> (sdf1.format(payment.getCreated()* 1000L).compareTo(startDate)>=0
+                        &&sdf1.format(payment.getCreated()* 1000L).compareTo(endDate)<=0 ))
+                .collect(Collectors.toList());
+        return filteredPaymentIntents;
+    }
+
 
 
 
@@ -132,5 +149,5 @@ private RefundInfoSvc refundInfoSvc;
 
 
 
-}
 
+}
