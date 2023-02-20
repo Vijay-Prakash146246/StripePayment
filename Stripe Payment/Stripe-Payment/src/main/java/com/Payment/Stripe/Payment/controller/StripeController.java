@@ -10,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class StripeController
@@ -76,10 +80,42 @@ private RefundInfoSvc refundInfoSvc;
         return refunds;
     }
 
+    //Api for getting list of all payment using Booking Number
+    @GetMapping("/SearchBy/{bookingNumber}")
+    public List<Charge> searchPaymentsByBookingNumber(@PathVariable String bookingNumber) throws StripeException
+    {
+        Stripe.apiKey = stripeKey;
+        Map<String, Object> params1 = new HashMap<>();
+        // params.put("limit", 3);
+        ChargeCollection charges = Charge.list(params1);
+        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+                .filter(payment -> bookingNumber.equals(payment.getMetadata().get("bookingno")))
+                .collect(Collectors.toList());
+        return filteredPaymentIntents;
+    }
 
+    @GetMapping("/createRefund/{bookingNumber}/{amount}")
+    public List<Refund> refundPaymentsByBookingNumber(@PathVariable String bookingNumber , @PathVariable Long amount) throws StripeException
+    {
+        Stripe.apiKey = stripeKey;
+        Map<String, Object> params1 = new HashMap<>();
+        // params.put("limit", 3);
+        ChargeCollection charges = Charge.list(params1);
+        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+                .filter(payment -> bookingNumber.equals(payment.getMetadata().get("bookingno")) && amount.equals(payment.getAmount()) )
+                .collect(Collectors.toList());
+        List<Refund> refundList = new ArrayList<>();
+        for (Charge filteredPaymentIntent : filteredPaymentIntents) {
+            Map<String, Object> params = new HashMap<>();
+            String id = filteredPaymentIntent.getId();
+            params.put("charge", id);
+            Refund refund = Refund.create(params);
+            refundList.add(refund);
+            refundInfoSvc.saveRefundResponse(refund);
+        }
 
-
-
+        return refundList;
+    }
 
 
 
