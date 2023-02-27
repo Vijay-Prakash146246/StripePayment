@@ -39,18 +39,23 @@ public class StripeController
     @GetMapping("Display-list-of-Payment-Transactions")
     public  ChargeCollection listAllCharges() throws StripeException
     {
-        Stripe.apiKey = stripeKey;
-        Map<String, Object> params = new HashMap<>();
-       // params.put("limit", 3);
-        ChargeCollection charges = Charge.list(params);
+//        Stripe.apiKey = stripeKey;
+//        Map<String, Object> params = new HashMap<>();
+//       // params.put("limit", 3);
+//        ChargeCollection charges = Charge.list(params);
+//        return charges;
+        ChargeCollection charges = transactionSvc.listAllCharges();
         return charges;
     }
+
     //API for getting  a particular  payment  details by payment id
     @GetMapping("Search-by-Transaction-ID/{id}")
     public  Charge retriveCharge(@PathVariable String id) throws StripeException
     {
-        Stripe.apiKey = stripeKey;
-        Charge charge = Charge.retrieve(id);
+//        Stripe.apiKey = stripeKey;
+//        Charge charge = Charge.retrieve(id);
+//        return charge;
+        Charge charge = transactionSvc.retriveCharge(id);
         return charge;
     }
 
@@ -60,11 +65,13 @@ private RefundInfoSvc refundInfoSvc;
     @PostMapping("Create-Refund/{id}")
     public  Refund CreateRefund(@PathVariable String id) throws StripeException
     {
-        Stripe.apiKey = stripeKey;
-        Map<String, Object> params = new HashMap<>();
-        params.put("charge", id);
-        Refund refund = Refund.create(params);
-        refundInfoSvc.saveRefundResponse(refund);
+//        Stripe.apiKey = stripeKey;
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("charge", id);
+//        Refund refund = Refund.create(params);
+//        refundInfoSvc.saveRefundResponse(refund);
+//        return refund;
+        Refund refund = refundInfoSvc.CreateRefund(id);
         return refund;
 
     }
@@ -72,10 +79,12 @@ private RefundInfoSvc refundInfoSvc;
     @GetMapping("Display-list-of-refund-transactions")
     public  RefundCollection listAllRefunds() throws StripeException
     {
-        Stripe.apiKey = stripeKey;
-        Map<String, Object> params = new HashMap<>();
-        //params.put("limit", 3)
-        RefundCollection refunds = Refund.list(params);
+//        Stripe.apiKey = stripeKey;
+//        Map<String, Object> params = new HashMap<>();
+//        //params.put("limit", 3)
+//        RefundCollection refunds = Refund.list(params);
+//        return refunds;
+        RefundCollection refunds = refundInfoSvc.listAllRefunds();
         return refunds;
     }
 
@@ -83,54 +92,61 @@ private RefundInfoSvc refundInfoSvc;
     @GetMapping("/SearchBy/{bookingNumber}")
     public List<Charge> searchPaymentsByBookingNumber(@PathVariable String bookingNumber) throws StripeException
     {
-        Stripe.apiKey = stripeKey;
-        Map<String, Object> params1 = new HashMap<>();
-        // params.put("limit", 3);
-        ChargeCollection charges = Charge.list(params1);
-        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
-                .filter(payment -> bookingNumber.equals(payment.getMetadata().get("bookingno")))
-                .collect(Collectors.toList());
+//        Stripe.apiKey = stripeKey;
+//        Map<String, Object> params1 = new HashMap<>();
+//        // params.put("limit", 3);
+//        ChargeCollection charges = Charge.list(params1);
+//        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+//                .filter(payment -> bookingNumber.equals(payment.getMetadata().get("bookingno")))
+//                .collect(Collectors.toList());
+//        return filteredPaymentIntents;
+        List<Charge> filteredPaymentIntents = transactionSvc.searchPaymentsByBookingNumber(bookingNumber);
         return filteredPaymentIntents;
     }
+
     //API for create Refund By booking number and amount
     @GetMapping("/CreateRefund/{bookingNumber}/{amount}")
-    public List<Refund> refundPaymentsByBookingNumber(@PathVariable String bookingNumber , @PathVariable Long amount) throws StripeException
+    public List<Refund> refundPaymentsByBookingNumberAndAmount(@PathVariable String bookingNumber , @PathVariable Long amount) throws StripeException
     {
-        Stripe.apiKey = stripeKey;
-        Map<String, Object> params1 = new HashMap<>();
-        // params.put("limit", 3);
-        ChargeCollection charges = Charge.list(params1);
-        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
-                .filter(payment -> bookingNumber.equals(payment.getMetadata().get("bookingno")) && amount.equals(payment.getAmount()) )
-                .collect(Collectors.toList());
-        List<Refund> refundList = new ArrayList<>();
-        for (Charge filteredPaymentIntent : filteredPaymentIntents) {
-            Map<String, Object> params = new HashMap<>();
-            String id = filteredPaymentIntent.getId();
-            params.put("charge", id);
-            Refund refund = Refund.create(params);
-            refundList.add(refund);
-            refundInfoSvc.saveRefundResponse(refund);
-        }
-
+//        Stripe.apiKey = stripeKey;
+//        Map<String, Object> params1 = new HashMap<>();
+//        // params.put("limit", 3);
+//        ChargeCollection charges = Charge.list(params1);
+//        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+//                .filter(payment -> bookingNumber.equals(payment.getMetadata().get("bookingno")) && amount.equals(payment.getAmount()) )
+//                .collect(Collectors.toList());
+//        List<Refund> refundList = new ArrayList<>();
+//        for (Charge filteredPaymentIntent : filteredPaymentIntents) {
+//            Map<String, Object> params = new HashMap<>();
+//            String id = filteredPaymentIntent.getId();
+//            params.put("charge", id);
+//            Refund refund = Refund.create(params);
+//            refundList.add(refund);
+//            refundInfoSvc.saveRefundResponse(refund);
+//        }
+//
+//        return refundList;
+        List<Refund> refundList = refundInfoSvc.refundPaymentsByBookingNumberAndAmount(bookingNumber,amount);
         return refundList;
     }
 
     //API for Search By date Range
     @GetMapping("/SearchBy/{startDate}/{endDate}")
     public List<Charge> searchPaymentsByDateRange(@PathVariable String startDate, @PathVariable String endDate) throws StripeException, ParseException {
-        Stripe.apiKey = stripeKey;
-        // Convert start and end date strings to Date objects
-        Date startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
-        Date endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
-        Map<String, Object> params1 = new HashMap<>();
-        // params.put("limit", 3);
-        ChargeCollection charges = Charge.list(params1);
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
-                .filter(payment -> (sdf1.format(payment.getCreated()* 1000L).compareTo(startDate)>=0
-                        &&sdf1.format(payment.getCreated()* 1000L).compareTo(endDate)<=0 ))
-                .collect(Collectors.toList());
+//        Stripe.apiKey = stripeKey;
+//        // Convert start and end date strings to Date objects
+//        Date startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+//        Date endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+//        Map<String, Object> params1 = new HashMap<>();
+//        // params.put("limit", 3);
+//        ChargeCollection charges = Charge.list(params1);
+//        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+//        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+//                .filter(payment -> (sdf1.format(payment.getCreated()* 1000L).compareTo(startDate)>=0
+//                        &&sdf1.format(payment.getCreated()* 1000L).compareTo(endDate)<=0 ))
+//                .collect(Collectors.toList());
+//        return filteredPaymentIntents;
+        List<Charge> filteredPaymentIntents = transactionSvc.searchPaymentsByDateRange(startDate,endDate);
         return filteredPaymentIntents;
     }
 

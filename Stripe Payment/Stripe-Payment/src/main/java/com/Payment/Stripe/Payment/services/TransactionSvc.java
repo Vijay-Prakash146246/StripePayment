@@ -5,12 +5,21 @@ import com.Payment.Stripe.Payment.repository.TransactionRepo;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import com.stripe.model.ChargeCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class TransactionSvc
 {
@@ -20,6 +29,8 @@ public class TransactionSvc
     private TransactionRepo transactionRepo;
     @Autowired
     private  PaymentInfoSvc paymentInfoSvc;
+
+    //Method for creating payment
     public Charge payUsingCard(Transaction transaction) throws StripeException
     {
         Stripe.apiKey = stripeKey;
@@ -59,5 +70,55 @@ public class TransactionSvc
         paymentInfoSvc.savePaymentResponse(responseId);
         //System.out.println(charge);
         return charge;
+    }
+
+    //method for getting list of all payment
+    public ChargeCollection listAllCharges() throws StripeException
+    {
+        Stripe.apiKey = stripeKey;
+        Map<String, Object> params = new HashMap<>();
+        // params.put("limit", 3);
+        ChargeCollection charges = Charge.list(params);
+        return charges;
+    }
+
+
+    //method for getting  a particular  payment  details by payment id
+    public  Charge retriveCharge(String id) throws StripeException
+    {
+        Stripe.apiKey = stripeKey;
+        Charge charge = Charge.retrieve(id);
+        return charge;
+    }
+
+    //method for getting list of all payment using Booking Number
+    public List<Charge> searchPaymentsByBookingNumber(String bookingNumber) throws StripeException
+    {
+        Stripe.apiKey = stripeKey;
+        Map<String, Object> params1 = new HashMap<>();
+        // params.put("limit", 3);
+        ChargeCollection charges = Charge.list(params1);
+        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+                .filter(payment -> bookingNumber.equals(payment.getMetadata().get("bookingno")))
+                .collect(Collectors.toList());
+        return filteredPaymentIntents;
+    }
+
+
+    //method for Search By date Range
+    public List<Charge> searchPaymentsByDateRange(String startDate, String endDate) throws StripeException, ParseException {
+        Stripe.apiKey = stripeKey;
+        // Convert start and end date strings to Date objects
+        Date startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+        Date endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+        Map<String, Object> params1 = new HashMap<>();
+        // params.put("limit", 3);
+        ChargeCollection charges = Charge.list(params1);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
+                .filter(payment -> (sdf1.format(payment.getCreated()* 1000L).compareTo(startDate)>=0
+                        &&sdf1.format(payment.getCreated()* 1000L).compareTo(endDate)<=0 ))
+                .collect(Collectors.toList());
+        return filteredPaymentIntents;
     }
 }
