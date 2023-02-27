@@ -114,10 +114,10 @@ public class TransactionSvc
         Map<String, Object> params1 = new HashMap<>();
         // params.put("limit", 3);
         ChargeCollection charges = Charge.list(params1);
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<Charge> filteredPaymentIntents = StreamSupport.stream(charges.getData().spliterator(), false)
-                .filter(payment -> (sdf1.format(payment.getCreated()* 1000L).compareTo(startDate)>=0
-                        &&sdf1.format(payment.getCreated()* 1000L).compareTo(endDate)<=0 ))
+                .filter(payment -> (simpleDateFormat.format(payment.getCreated()* 1000L).compareTo(startDate)>=0
+                        &&simpleDateFormat.format(payment.getCreated()* 1000L).compareTo(endDate)<=0 ))
                 .collect(Collectors.toList());
         return filteredPaymentIntents;
     }

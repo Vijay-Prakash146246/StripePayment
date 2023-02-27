@@ -26,8 +26,6 @@ public class RefundInfoSvc
     String stripeKey;
     @Autowired
     private RefundInfoRepo refundInfoRepo;
-//    @Autowired
-//    private RefundInfoSvc refundInfoSvc;
     public void saveRefundResponse(Refund refund) throws StripeException
     {
         RefundInfo refundInfo = new RefundInfo();
