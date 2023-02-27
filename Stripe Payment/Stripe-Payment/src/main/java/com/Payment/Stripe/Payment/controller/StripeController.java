@@ -3,7 +3,6 @@ import com.Payment.Stripe.Payment.model.Transaction;
 import com.Payment.Stripe.Payment.repository.PaymentInfoRepo;
 import com.Payment.Stripe.Payment.services.RefundInfoSvc;
 import com.Payment.Stripe.Payment.services.TransactionSvc;
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RestController
 public class StripeController
@@ -23,9 +19,9 @@ public class StripeController
     private PaymentInfoRepo paymentInfoRepo;
     @Value("${Stripe.apiKey}")
     String stripeKey;
+
     @Autowired
     private TransactionSvc transactionSvc;
-
 
     //API for creating payment
     @PostMapping("/Create-Payment")
@@ -51,45 +47,46 @@ public class StripeController
         return charge;
     }
 
-//API for create  refund for particular payment using payment id
-@Autowired
-private RefundInfoSvc refundInfoSvc;
-    @PostMapping("Create-Refund/{id}")
-    public  Refund CreateRefund(@PathVariable String id) throws StripeException
-    {
-        Refund refund = refundInfoSvc.CreateRefund(id);
-        return refund;
-    }
-    //API for  getting list of all refund
-    @GetMapping("Display-list-of-refund-transactions")
-    public  RefundCollection listAllRefunds() throws StripeException
-    {
-        RefundCollection refunds = refundInfoSvc.listAllRefunds();
-        return refunds;
-    }
+    //API for create  refund for particular payment using payment id
+    @Autowired
+    private RefundInfoSvc refundInfoSvc;
+        @PostMapping("Create-Refund/{id}")
+        public  Refund CreateRefund(@PathVariable String id) throws StripeException
+        {
+            Refund refund = refundInfoSvc.CreateRefund(id);
+            return refund;
+        }
 
-    //Api for getting list of all payment using Booking Number
-    @GetMapping("/SearchBy/{bookingNumber}")
-    public List<Charge> searchPaymentsByBookingNumber(@PathVariable String bookingNumber) throws StripeException
-    {
-        List<Charge> filteredPaymentIntents = transactionSvc.searchPaymentsByBookingNumber(bookingNumber);
-        return filteredPaymentIntents;
-    }
+        //API for  getting list of all refund
+        @GetMapping("Display-list-of-refund-transactions")
+        public  RefundCollection listAllRefunds() throws StripeException
+        {
+            RefundCollection refunds = refundInfoSvc.listAllRefunds();
+            return refunds;
+        }
 
-    //API for create Refund By booking number and amount
-    @GetMapping("/CreateRefund/{bookingNumber}/{amount}")
-    public List<Refund> refundPaymentsByBookingNumberAndAmount(@PathVariable String bookingNumber , @PathVariable Long amount) throws StripeException
-    {
-        List<Refund> refundList = refundInfoSvc.refundPaymentsByBookingNumberAndAmount(bookingNumber,amount);
-        return refundList;
-    }
+        //Api for getting list of all payment using Booking Number
+        @GetMapping("/SearchBy/{bookingNumber}")
+        public List<Charge> searchPaymentsByBookingNumber(@PathVariable String bookingNumber) throws StripeException
+        {
+            List<Charge> filteredPaymentIntents = transactionSvc.searchPaymentsByBookingNumber(bookingNumber);
+            return filteredPaymentIntents;
+        }
 
-    //API for Search By date Range
-    @GetMapping("/SearchBy/{startDate}/{endDate}")
-    public List<Charge> searchPaymentsByDateRange(@PathVariable String startDate, @PathVariable String endDate) throws StripeException, ParseException {
-        List<Charge> filteredPaymentIntents = transactionSvc.searchPaymentsByDateRange(startDate,endDate);
-        return filteredPaymentIntents;
-    }
+        //API for create Refund By booking number and amount
+        @GetMapping("/CreateRefund/{bookingNumber}/{amount}")
+        public List<Refund> refundPaymentsByBookingNumberAndAmount(@PathVariable String bookingNumber , @PathVariable Long amount) throws StripeException
+        {
+            List<Refund> refundList = refundInfoSvc.refundPaymentsByBookingNumberAndAmount(bookingNumber,amount);
+            return refundList;
+        }
+
+        //API for Search By date Range
+        @GetMapping("/SearchBy/{startDate}/{endDate}")
+        public List<Charge> searchPaymentsByDateRange(@PathVariable String startDate, @PathVariable String endDate) throws StripeException, ParseException {
+            List<Charge> filteredPaymentIntents = transactionSvc.searchPaymentsByDateRange(startDate,endDate);
+            return filteredPaymentIntents;
+        }
 
 
 }

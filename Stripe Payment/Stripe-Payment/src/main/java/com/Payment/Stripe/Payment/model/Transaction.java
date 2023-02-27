@@ -1,9 +1,7 @@
 package com.Payment.Stripe.Payment.model;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 

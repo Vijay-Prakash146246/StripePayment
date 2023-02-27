@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +49,6 @@ public class RefundInfoSvc
 
     }
 
-
     //method for  getting list of all refund
     public RefundCollection listAllRefunds() throws StripeException
     {
@@ -60,7 +58,6 @@ public class RefundInfoSvc
         RefundCollection refunds = Refund.list(params);
         return refunds;
     }
-
 
     //method for create Refund By booking number and amount
     public List<Refund> refundPaymentsByBookingNumberAndAmount(String bookingNumber , Long amount) throws StripeException

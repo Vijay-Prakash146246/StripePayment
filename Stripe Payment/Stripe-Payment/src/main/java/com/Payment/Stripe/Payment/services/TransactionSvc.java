@@ -1,5 +1,4 @@
 package com.Payment.Stripe.Payment.services;
-
 import com.Payment.Stripe.Payment.model.Transaction;
 import com.Payment.Stripe.Payment.repository.TransactionRepo;
 import com.stripe.Stripe;
@@ -9,8 +8,6 @@ import com.stripe.model.ChargeCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -82,7 +79,6 @@ public class TransactionSvc
         return charges;
     }
 
-
     //method for getting  a particular  payment  details by payment id
     public  Charge retriveCharge(String id) throws StripeException
     {
@@ -103,7 +99,6 @@ public class TransactionSvc
                 .collect(Collectors.toList());
         return filteredPaymentIntents;
     }
-
 
     //method for Search By date Range
     public List<Charge> searchPaymentsByDateRange(String startDate, String endDate) throws StripeException, ParseException {
